@@ -40,13 +40,13 @@ type ListingResult struct {
 		Total        int    `json:"total"`
 	} `json:"recentHistory"`
 	CurrentAveragePrice   float64 `json:"currentAveragePrice"`
-	CurrentAveragePriceNQ int     `json:"currentAveragePriceNQ"`
+	CurrentAveragePriceNQ float64 `json:"currentAveragePriceNQ"`
 	CurrentAveragePriceHQ float64 `json:"currentAveragePriceHQ"`
 	RegularSaleVelocity   float64 `json:"regularSaleVelocity"`
-	NqSaleVelocity        int     `json:"nqSaleVelocity"`
+	NqSaleVelocity        float64 `json:"nqSaleVelocity"`
 	HqSaleVelocity        float64 `json:"hqSaleVelocity"`
 	AveragePrice          float64 `json:"averagePrice"`
-	AveragePriceNQ        int     `json:"averagePriceNQ"`
+	AveragePriceNQ        float64 `json:"averagePriceNQ"`
 	AveragePriceHQ        float64 `json:"averagePriceHQ"`
 	MinPrice              int     `json:"minPrice"`
 	MinPriceNQ            int     `json:"minPriceNQ"`
