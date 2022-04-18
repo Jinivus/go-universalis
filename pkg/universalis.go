@@ -6,10 +6,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"golang.org/x/time/rate"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 const (
@@ -19,7 +21,8 @@ const (
 var errNonNilContext = errors.New("context must be non-nil")
 
 type Client struct {
-	client *http.Client
+	client  *http.Client
+	limiter *rate.Limiter
 
 	// Base URL with trailing slash, defaults to "https://universalis.app/api/v2/"
 	BaseUrl *url.URL
@@ -38,8 +41,25 @@ func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
+
 	baseUrl, _ := url.Parse(defaultBaseURL)
 	c := &Client{client: httpClient, BaseUrl: baseUrl}
+	c.limiter = rate.NewLimiter(rate.Every(time.Second), 20)
+	c.common.client = c
+	c.Listings = (*ListingService)(&c.common)
+	c.History = (*HistoryService)(&c.common)
+
+	return c
+}
+
+func NewClientWithCustomLimiter(httpClient *http.Client, limiter *rate.Limiter) *Client {
+	if httpClient == nil {
+		httpClient = &http.Client{}
+	}
+
+	baseUrl, _ := url.Parse(defaultBaseURL)
+	c := &Client{client: httpClient, BaseUrl: baseUrl}
+	c.limiter = limiter
 	c.common.client = c
 	c.Listings = (*ListingService)(&c.common)
 	c.History = (*HistoryService)(&c.common)
@@ -80,7 +100,10 @@ func (c *Client) NewRequest(method, urlString string, body interface{}) (*http.R
 }
 
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*Response, error) {
-
+	err := c.limiter.Wait(ctx) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return nil, err
+	}
 	bareResp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
