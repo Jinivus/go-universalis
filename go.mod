@@ -3,6 +3,7 @@ module github.com/jinivus/go-universalis
 go 1.18
 
 require (
+	github.com/dustin/go-humanize v1.0.0
 	github.com/jinivus/go-xivapi v0.0.1
 	github.com/spf13/cobra v1.4.0
 )

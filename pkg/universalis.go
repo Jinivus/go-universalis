@@ -27,6 +27,7 @@ type Client struct {
 	common service
 
 	Listings *ListingService
+	History  *HistoryService
 }
 
 type service struct {
@@ -41,6 +42,7 @@ func NewClient(httpClient *http.Client) *Client {
 	c := &Client{client: httpClient, BaseUrl: baseUrl}
 	c.common.client = c
 	c.Listings = (*ListingService)(&c.common)
+	c.History = (*HistoryService)(&c.common)
 
 	return c
 }
