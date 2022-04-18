@@ -26,10 +26,10 @@ type HistoryResult struct {
 	StackSizeHistogramHQ struct {
 		Num1 int `json:"1"`
 	} `json:"stackSizeHistogramHQ"`
-	RegularSaleVelocity int    `json:"regularSaleVelocity"`
-	NqSaleVelocity      int    `json:"nqSaleVelocity"`
-	HqSaleVelocity      int    `json:"hqSaleVelocity"`
-	WorldName           string `json:"worldName"`
+	RegularSaleVelocity float64 `json:"regularSaleVelocity"`
+	NqSaleVelocity      float64 `json:"nqSaleVelocity"`
+	HqSaleVelocity      float64 `json:"hqSaleVelocity"`
+	WorldName           string  `json:"worldName"`
 }
 
 func (s *HistoryService) History(ctx context.Context, world string, query string) (*HistoryResult, *Response, error) {
